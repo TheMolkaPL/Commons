@@ -7,16 +7,22 @@ import java.util.Map;
 import java.util.Set;
 
 public class CommandContext {
+    private final String[] args;
     private final Command command;
     private final Map<String, String> flags;
     private final String label;
     private final List<String> params;
 
-    public CommandContext(Command command, Map<String, String> flags, String label, List<String> params) {
+    public CommandContext(String[] args, Command command, Map<String, String> flags, String label, List<String> params) {
+        this.args = args;
         this.command = command;
         this.flags = flags;
         this.label = label;
         this.params = params;
+    }
+
+    public String[] getArgs() {
+        return this.args;
     }
 
     public Command getCommand() {
@@ -136,12 +142,23 @@ public class CommandContext {
     }
 
     protected Boolean parseBoolean(String bool, Boolean def) {
-        if (bool.equals("true") || bool.equals("1") || bool.equals("yes") || bool.equals("on")) {
-            return Boolean.TRUE;
-        } else if (bool.equals("false") || bool.equals("0") || bool.equals("no") || bool.equals("off")) {
-            return Boolean.FALSE;
-        } else {
-            return def;
+        switch (bool.toLowerCase()) {
+            case "true":
+            case "1":
+            case "yes":
+            case "on":
+            case "enable":
+            case "enabled":
+                return Boolean.TRUE;
+            case "false":
+            case "0":
+            case "no":
+            case "off":
+            case "disable":
+            case "disabled:":
+                return Boolean.FALSE;
+            default:
+                return def;
         }
     }
 

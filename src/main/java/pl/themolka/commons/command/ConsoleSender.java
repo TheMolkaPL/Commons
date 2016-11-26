@@ -7,7 +7,12 @@ import java.util.UUID;
 public class ConsoleSender implements Session<Runtime> {
     public static final String NAME = "*Console";
 
+    private static final ConsoleSender singleton = new ConsoleSender();
+
     private final Runtime runtime = Runtime.getRuntime();
+
+    protected ConsoleSender() {
+    }
 
     @Override
     public Runtime getRepresenter() {
@@ -57,5 +62,9 @@ public class ConsoleSender implements Session<Runtime> {
     @Override
     public void sendSuccess(String success) {
         this.send("[Success]" + success);
+    }
+
+    public static ConsoleSender getConsole() {
+        return singleton;
     }
 }

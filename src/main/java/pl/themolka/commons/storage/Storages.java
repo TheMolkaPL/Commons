@@ -1,7 +1,5 @@
 package pl.themolka.commons.storage;
 
-import org.jdom2.JDOMException;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -11,10 +9,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class Storages {
-    private final StorageFileManagement fileManagement = new StorageFileManagement();
+    private IStorageFileManagement fileManagement;
     private final Map<String, Storage> storageMap = new HashMap<>();
 
-    public StorageFileManagement getFileManagement() {
+    public Storages() {
+        this.fileManagement = new XMLFileManagement(); // default file management
+    }
+
+    public IStorageFileManagement getFileManagement() {
         return this.fileManagement;
     }
 
@@ -44,17 +46,19 @@ public class Storages {
     }
 
     public void insertStorages(List<Storage> storageList) {
-        for (Storage storage : storageList) {
-            this.insertStorage(storage);
+        if (storageList != null) {
+            for (Storage storage : storageList) {
+                this.insertStorage(storage);
+            }
         }
     }
 
-    public void insertStoragesFromDefaultFile() throws IOException, JDOMException {
-        this.insertStorages(this.getFileManagement().readStorageFile());
+    public void insertStoragesFromDefaultFile() throws IOException {
+        this.insertStorages(this.getFileManagement().readDefaultFile());
     }
 
-    public void insertStoragesFromFile(File file) throws IOException, JDOMException {
-        this.insertStorages(this.getFileManagement().readStorageFile(file));
+    public void insertStoragesFromFile(File file) throws IOException {
+        this.insertStorages(this.getFileManagement().readFile(file));
     }
 
     public void removeStorage(Storage storage) {
@@ -62,5 +66,9 @@ public class Storages {
         event.post();
 
         this.storageMap.remove(storage.getName());
+    }
+
+    public void setFileManagement(IStorageFileManagement fileManagement) {
+        this.fileManagement = fileManagement;
     }
 }

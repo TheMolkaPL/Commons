@@ -61,7 +61,7 @@ public class CommandContextParser implements CommandContext.IContextParser {
             this.params.add(arg);
         }
 
-        return new CommandContext(command, this.flags, label, this.params);
+        return new CommandContext(args, command, this.flags, label, this.params);
     }
 
     public Map<String, String> getFlags() {

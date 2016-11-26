@@ -12,7 +12,6 @@ import java.util.Set;
 
 public class Commands {
     private final Map<String, Command> commandMap = new HashMap<>();
-    private final ConsoleSender console = new ConsoleSender();
 
     public Command getCommand(String command) {
         return this.commandMap.get(command.toLowerCase());
@@ -35,7 +34,7 @@ public class Commands {
     }
 
     public ConsoleSender getConsole() {
-        return this.console;
+        return ConsoleSender.getConsole();
     }
 
     public void handleCommand(Session sender, CommandContext context) {

@@ -80,6 +80,10 @@ public class Command {
     }
 
     public void handleCommand(Session sender, CommandContext context) throws Exception {
+        if (this.getMethod() == null) {
+            return;
+        }
+
         CommandHandleEvent event = new CommandHandleEvent(context, sender);
         if (event.post()) {
             return;
@@ -90,6 +94,10 @@ public class Command {
     }
 
     public List<String> handleCompleter(Session sender, CommandContext context) throws Exception {
+        if (this.getCompleter() == null) {
+            return null;
+        }
+
         CompleterHandleEvent event = new CompleterHandleEvent(context, sender);
         if (event.post()) {
             return null;

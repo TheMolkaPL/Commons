@@ -50,13 +50,17 @@ public class Query {
     }
 
     public Query handle() {
+        return this.handle(this.getStorage());
+    }
+
+    public Query handle(Storage storage) {
         if (!this.isSelect()) {
             this.select(this.detectSelect());
         }
 
         this.handling = true;
 
-        try (PreparedStatement statement = this.getStorage().getConnection().prepareStatement(this.getQuery())) {
+        try (PreparedStatement statement = storage.getConnection().prepareStatement(this.getQuery())) {
             for (int i = 0; i < this.getParams().length; i++) {
                 statement.setObject(i + 1, this.getParams()[i]);
             }
@@ -72,14 +76,15 @@ public class Query {
             }
 
             for (QueryCallback callback : this.getResultCalls()) {
-                callback.onResult(result, count);
+                callback.onResult(result, -1, count);
             }
 
             if (result != null) {
                 result.first();
-                for (QueryCallback callback : this.getForEachCalls()) {
+                for (int i = 0; i < this.getForEachCalls().size(); i++) {
                     while (result.next()) {
-                        callback.onResult(result, count);
+                        QueryCallback callback = this.getForEachCalls().get(i);
+                        callback.onResult(result, i, count);
                     }
                 }
             }

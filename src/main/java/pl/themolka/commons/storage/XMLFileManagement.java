@@ -12,8 +12,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class StorageFileManagement {
+public class XMLFileManagement implements IStorageFileManagement {
     public static final File STORAGE_FILE = new File("storage.xml");
+
+    @Override
+    public File getDefaultFile() {
+        return STORAGE_FILE;
+    }
+
+    @Override
+    public List<Storage> readDefaultFile() throws IOException {
+        return this.readFile(this.getDefaultFile());
+    }
+
+    @Override
+    public List<Storage> readFile(File file) throws IOException {
+        if (!file.exists()) {
+            this.copyDefaultFile(file);
+        }
+
+        try {
+            Document document = new SAXBuilder().build(file);
+            return this.readStorage(document.getRootElement());
+        } catch (JDOMException jdom) {
+            return null;
+        }
+    }
 
     public List<Storage> readStorage(Element element) {
         List<Storage> storageList = new ArrayList<>();
@@ -26,19 +50,6 @@ public class StorageFileManagement {
         }
 
         return storageList;
-    }
-
-    public List<Storage> readStorageFile() throws IOException, JDOMException {
-        return this.readStorageFile(STORAGE_FILE);
-    }
-
-    public List<Storage> readStorageFile(File file) throws IOException, JDOMException {
-        if (!file.exists()) {
-            this.copyDefaultFile(file);
-        }
-
-        Document document = new SAXBuilder().build(file);
-        return this.readStorage(document.getRootElement());
     }
 
     public Storage readStorageProvider(Element element) {
