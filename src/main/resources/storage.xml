@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<storage>
+    <!-- For the "CUSTOM" provider see: https://github.com/brettwooldridge/HikariCP/wiki/Configuration -->
+
+    <!-- MySQL -->
+    <provider name="MySQL" provider="CUSTOM">
+        <property key="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
+        <property key="dataSource.serverName" value="localhost" />
+        <property key="dataSource.port" value="3306" />
+        <property key="dataSource.databaseName" value="database" />
+        <property key="dataSource.user" value="root" />
+        <property key="dataSource.password" value="password" />
+        <property key="dataSource.cachePrepStmts" value="true" />
+        <property key="dataSource.prepStmtCacheSize" value="250" />
+        <property key="dataSource.prepStmtCacheSqlLimit" value="2048" />
+    </provider>
+
+    <!-- PostgreSQL -->
+    <provider name="PostgreSQL" provider="CUSTOM">
+        <property key="dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />
+        <property key="dataSource.serverName" value="localhost" />
+        <property key="dataSource.port" value="5432" />
+        <property key="dataSource.databaseName" value="database" />
+        <property key="dataSource.user" value="root" />
+        <property key="dataSource.password" value="password" />
+    </provider>
+
+    <!-- SQLite -->
+    <provider name="SQLite" provider="SQLITE">
+        <property key="file" value="sqlite.db" />
+    </provider>
+</storage>
