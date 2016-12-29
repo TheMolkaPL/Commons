@@ -78,7 +78,8 @@ public class Commands {
             sender.sendError("Musisz podac liczbe, nie ciag znakow!");
         } catch (Exception ex) {
             sender.sendError("Wykryto niespodziewany blad - powiadom o tym administracje!");
-            sender.sendError(ex.getLocalizedMessage());
+            sender.sendError(ex.getClass().getName() + ": " + ex.getLocalizedMessage());
+            ex.printStackTrace();
         }
     }
 
