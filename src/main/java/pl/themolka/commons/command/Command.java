@@ -2,6 +2,7 @@ package pl.themolka.commons.command;
 
 import pl.themolka.commons.session.Session;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class Command {
         return this.completer;
     }
 
-    public void handleCommand(Session sender, CommandContext context) throws Exception {
+    public void handleCommand(Session sender, CommandContext context) throws Throwable {
         if (this.getMethod() == null) {
             return;
         }
@@ -89,11 +90,15 @@ public class Command {
             return;
         }
 
-        this.getMethod().setAccessible(true);
-        this.getMethod().invoke(this.getClassObject(), sender, context);
+        try {
+            this.getMethod().setAccessible(true);
+            this.getMethod().invoke(this.getClassObject(), sender, context);
+        } catch (InvocationTargetException ex) {
+            throw ex.getTargetException();
+        }
     }
 
-    public List<String> handleCompleter(Session sender, CommandContext context) throws Exception {
+    public List<String> handleCompleter(Session sender, CommandContext context) throws Throwable {
         if (this.getCompleter() == null) {
             return null;
         }
@@ -103,11 +108,15 @@ public class Command {
             return null;
         }
 
-        this.getCompleter().setAccessible(true);
-        Object result = this.getCompleter().invoke(this.getClassObject(), sender, context);
+        try {
+            this.getCompleter().setAccessible(true);
+            Object result = this.getCompleter().invoke(this.getClassObject(), sender, context);
 
-        if (result instanceof List) {
-            return (List<String>) result;
+            if (result instanceof List) {
+                return (List<String>) result;
+            }
+        } catch (InvocationTargetException ex) {
+            throw ex.getTargetException();
         }
 
         return null;
